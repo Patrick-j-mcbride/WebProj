@@ -34,14 +34,30 @@ class Basket {
 
   removeGoody() {
     this.goodyList.pop();
+    if (this.goodyList.length === 0) {
+      this.confirmed = false;
+    } else {
+      this.confirmed = true;
+    }
   }
 
-  changeBasket() {
-    this.basketType = this.basketType === "brown" ? "white" : "brown";
+  changeBasket(basketType) {
+    this.basketType = basketType;
   }
 
   confirmGoody() {
     this.confirmed = true;
+  }
+
+  save() {
+    return new Memento(this);
+  }
+
+  restore(memento) {
+    this.goodyList = memento.getGoodyList();
+    this.basketType = memento.getBasketType();
+    this.confirmed = memento.getConfirmed();
+    console.log(this);
   }
 
   applyPreconfig(option) {
@@ -87,13 +103,20 @@ class Basket {
   }
 }
 // GRADING: COMMAND
-class Momento {
+class Memento {
   constructor(state) {
-    this.state = state;
+    this.goodyList = state.goodyList.slice();
+    this.basketType = state.basketType;
+    this.confirmed = state.confirmed;
   }
-
-  getState() {
-    return this.state;
+  getGoodyList() {
+    return this.goodyList;
+  }
+  getBasketType() {
+    return this.basketType;
+  }
+  getConfirmed() {
+    return this.confirmed;
   }
 }
 
@@ -114,6 +137,7 @@ class HistoryManager {
   restoreState(originator) {
     if (this.currentPosition >= 0) {
       const memento = this.mementos[this.currentPosition];
+      console.log(memento);
       originator.restore(memento);
       this.currentPosition--;
     }
@@ -128,6 +152,7 @@ class HistoryManager {
     }
   }
 }
+const historyManager = new HistoryManager();
 const basket = new Basket();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -154,12 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
     basketImage.src = basketImagePaths[basket.basketType];
     basketImage.classList.add("basket-image");
 
-    // Calculate the total width and height of the goodie container
-    const numGoodies = basket.goodyList.length;
-    const numRows = Math.ceil(numGoodies / 6);
-    const containerWidth = 600;
-    const containerHeight = numRows * 150;
-
     const container = document.createElement("div");
     container.classList.add("container");
 
@@ -167,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
     basketElement.appendChild(basketImage);
 
     // Display the goodies inside the basket
-    basket.goodyList.forEach((goody, index) => {
+    basket.goodyList.forEach((goody) => {
       const goodyImage = document.createElement("img");
       goodyImage.src = goodyImagePaths[goody];
       goodyImage.classList.add("goody-image");
@@ -179,6 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   confirmBtn.addEventListener("click", () => {
     basket.confirmGoody();
+    historyManager.saveState(basket);
+    console.log(historyManager.mementos);
     updateBasketDisplay();
   });
 
@@ -200,12 +221,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   brownBasketBtn.addEventListener("click", () => {
-    basket.changeBasket();
+    basket.changeBasket("brown");
     updateBasketDisplay();
   });
 
   whiteBasketBtn.addEventListener("click", () => {
-    basket.changeBasket();
+    basket.changeBasket("white");
     updateBasketDisplay();
   });
 
@@ -224,10 +245,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   undoBtn.addEventListener("click", () => {
-    // Implement undo functionality here.
+    historyManager.restoreState(basket);
+    updateBasketDisplay();
   });
   redoBtn.addEventListener("click", () => {
-    // Implement redo functionality here.
+    historyManager.redoState(basket);
+    updateBasketDisplay();
   });
 
   saveBtn.addEventListener("click", () => {
