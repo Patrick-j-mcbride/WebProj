@@ -1,60 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Interactive Elements Example</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="app.js" defer></script>
-</head>
-<body>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="files.html">Files</a>
-    <a href="help.html">Help</a>
-</nav>
+  </head>
+  <body>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="files.html">Files</a>
+      <a href="help.html">Help</a>
+    </nav>
 
-<main>
-    <div class="buttons">
+    <main>
+      <div class="buttons">
         <h3>Egg Options</h3>
         <div class="button-group">
-            <select id="goodySelect">
-                <option value="whiteEgg">White Egg</option>
-                <option value="blueEgg">Blue Egg</option>
-                <option value="stripeEgg">Striped Egg</option>
-                <option value="chocolateBunny">Chocolate Bunny</option>
-            </select>
+          <select id="goodySelect">
+            <option value="whiteEgg">White Egg</option>
+            <option value="blueEgg">Blue Egg</option>
+            <option value="stripedEgg">Striped Egg</option>
+            <option value="chocolateBunny">Chocolate Bunny</option>
+          </select>
+          <div class="button-group">
             <button id="add">Add</button>
             <button id="confirm">Confirm</button>
             <button id="delete">Delete</button>
+          </div>
         </div>
-        <br> <br>
         <div class="button-group">
-            <button id="changeBasket">Change Basket</button>
+          <h3>Basket Options</h3>
+          <button id="brownBasket">Brown</button>
+          <button id="whiteBasket">White</button>
         </div>
-        <br> <br>
         <div class="button-group">
-            <button id="base">Base</button>
-            <button id="allEggs">All Eggs</button>
-            <button id="mixed">Mixed</button>
+          <h3>Preset Options</h3>
+          <button id="base">Base</button>
+          <button id="allEggs">All Eggs</button>
+          <button id="mixed">Mixed</button>
         </div>
-        <br> <br>
         <div class="button-group">
-            <button id="undo">Undo</button>
-            <button id="redo">Redo</button>
+          <h3>Undo/Redo</h3>
+          <button id="undo">Undo</button>
+          <button id="redo">Redo</button>
         </div>
-        <br> <br>
         <div class="button-group">
-            File name: <input type="text" value="" id="fileName" />
-            <button id="save">Save</button>
+          <h3>Save Basket To File</h3>
+          <input type="text" value="FileName" id="fileName" />
+          <button id="save">Save</button>
         </div>
-    </div>
+      </div>
 
-    <div id="basketContainer">
+      <div id="basketContainer">
         <div class="basket brown-basket" id="basket"></div>
-    </div>
-</main>
-</body>
+      </div>
+    </main>
+  </body>
 </html>
-
-
-
