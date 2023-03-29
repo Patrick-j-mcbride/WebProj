@@ -21,6 +21,7 @@ class Basket {
     if (this.confirmed) {
       this.goodyList.push(goody);
       this.confirmed = false;
+      historyManager.saveState(basket);
     }
   }
 
@@ -39,25 +40,44 @@ class Basket {
     } else {
       this.confirmed = true;
     }
+    historyManager.saveState(basket);
   }
 
   changeBasket(basketType) {
     this.basketType = basketType;
+    historyManager.saveState(basket);
   }
 
-  confirmGoody() {
-    this.confirmed = true;
+  confirmGoody(selectedGoody) {
+    if (!this.confirmed) {
+      this.goodyList.push(selectedGoody);
+      historyManager.saveState(basket);
+    }
   }
 
   save() {
     return new Memento(this);
   }
 
+  saveToFile() {
+    if (!this.confirmed) {
+      this.goodyList.pop();
+      this.confirmed = true;
+    }
+    const memento = new Memento(this);
+    return JSON.stringify(memento);
+  }
+
+  loadFromFile(serializedMemento) {
+    const deserializedMemento = JSON.parse(serializedMemento);
+    const memento = new Memento(deserializedMemento);
+    this.restore(memento);
+  }
+
   restore(memento) {
     this.goodyList = memento.getGoodyList();
     this.basketType = memento.getBasketType();
     this.confirmed = memento.getConfirmed();
-    console.log(this);
   }
 
   applyPreconfig(option) {
@@ -66,6 +86,7 @@ class Basket {
         this.basketType = "brown";
         this.goodyList = [];
         this.confirmed = true;
+        historyManager.saveState(basket);
         break;
       case "allEggs":
         this.basketType = "brown";
@@ -79,6 +100,7 @@ class Basket {
           "whiteEgg",
         ];
         this.confirmed = true;
+        historyManager.saveState(basket);
         break;
       case "mixed":
         this.basketType = "white";
@@ -95,6 +117,7 @@ class Basket {
           "whiteEgg",
         ];
         this.confirmed = true;
+        historyManager.saveState(basket);
         break;
       default:
         console.error("Invalid preconfig option");
@@ -128,6 +151,7 @@ class HistoryManager {
   }
   // Add a new Memento object to the stack
   saveState(originator) {
+    // GRADING: ACTION
     const memento = originator.save();
     this.mementos.push(memento);
     this.currentPosition++;
@@ -135,8 +159,8 @@ class HistoryManager {
 
   // Restore the state from the Memento object at the current position
   restoreState(originator) {
-    if (this.currentPosition >= 0) {
-      const memento = this.mementos[this.currentPosition];
+    if (this.currentPosition > 0) {
+      const memento = this.mementos[this.currentPosition - 1];
       console.log(memento);
       originator.restore(memento);
       this.currentPosition--;
@@ -169,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const redoBtn = document.getElementById("redo");
   const saveBtn = document.getElementById("save");
   const basketElement = document.getElementById("basket");
+  const fileName = document.getElementById("fileName");
 
   const updateBasketDisplay = () => {
     // Clear the current content of the basket element
@@ -195,11 +220,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   updateBasketDisplay();
+  historyManager.saveState(basket);
 
   confirmBtn.addEventListener("click", () => {
-    basket.confirmGoody();
-    historyManager.saveState(basket);
-    console.log(historyManager.mementos);
+    basket.confirmGoody("whiteEgg");
     updateBasketDisplay();
   });
 
@@ -254,6 +278,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   saveBtn.addEventListener("click", () => {
-    // Implement save functionality here, possibly using AJAX to send data to the server.
+    const fileSaveName = fileName.value + ".json";
+    const xhr = new XMLHttpRequest();
+
+    const params =
+      "data=" +
+      encodeURIComponent(basket.saveToFile()) +
+      "&fileName=" +
+      encodeURIComponent(fileSaveName);
+
+    xhr.open("GET", "fileManager.php?" + params);
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log(xhr.responseText);
+      }
+    };
+
+    xhr.send();
   });
 });
