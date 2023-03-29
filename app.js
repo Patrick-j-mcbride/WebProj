@@ -219,6 +219,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  const params = new URLSearchParams(window.location.search);
+  const fileUrl = params.get("load");
+
+  if (fileUrl) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "uploads/" + fileUrl);
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const serializedMemento = xhr.responseText;
+        basket.loadFromFile(serializedMemento);
+        updateBasketDisplay();
+      }
+    };
+
+    xhr.send();
+  }
+
   updateBasketDisplay();
   historyManager.saveState(basket);
 

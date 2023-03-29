@@ -20,7 +20,7 @@ nav {
   overflow: hidden;
 }
 
-nav a {
+a.nav-bar {
   font: 1em sans-serif;
   float: left;
   display: block;
@@ -30,7 +30,7 @@ nav a {
   text-decoration: none;
 }
 
-nav a:hover {
+a.nav-bar:hover {
   background-color: #ddd;
   color: black;
 }
@@ -39,6 +39,12 @@ nav a:hover {
 main {
   margin: 30px;
   text-align: center;
+  font: 1em sans-serif;
+}
+
+.file-main {
+  margin: 30px;
+  text-align: left;
   font: 1em sans-serif;
 }
 
@@ -53,6 +59,7 @@ h3 {
   position: relative;
   width: 100%;
   height: auto;
+  perspective: 500px;
 }
 
 .basket-image {
@@ -62,6 +69,10 @@ h3 {
 .goody-image {
   width: 100px;
   height: 150px;
+  transition: transform 0.5s ease;
+}
+.goody-image:hover {
+  transform: rotateY(-30deg);
 }
 
 .buttons {
@@ -105,4 +116,70 @@ h3 {
   left: calc(50% - 300px);
   bottom: 0px;
   margin-top: 20px;
+}
+
+.file-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.file-name {
+  font: 1em sans-serif;
+  flex-grow: 1;
+  margin-right: 10px;
+  text-align: left;
+}
+
+.file-list {
+  list-style-position: outside;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+input[type="file"] {
+  font: 1em sans-serif;
+  font-size: 16px;
+  padding: 15px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  margin: 7px;
+}
+
+header {
+  font: 1em sans-serif;
+  background-color: #333;
+  color: #fff;
+  padding: 1px;
+  text-align: left;
+  padding-left: 15px;
+  border-bottom: 2px solid red;
+}
+body {
+  font: 1em sans-serif;
+}
+
+body {
+  background-image: linear-gradient(to bottom, #99ccff, #ff99cc);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+a.help {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #eee;
+  transition: all 0.2s ease;
+}
+
+a.help:hover {
+  background-color: #ddd;
 }

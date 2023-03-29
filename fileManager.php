@@ -4,13 +4,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $data = $_GET['data'] ?? '';
 
   if (!empty($data)) {
-    $file = fopen($fileName, 'w');
+    $file = fopen("uploads/" . $fileName, 'w');
     fwrite($file, $data);
     fclose($file);
-
-    echo 'Data saved to file: ' . $fileName;
-  } else {
-    echo 'No data to save';
   }
 }
 ?>
